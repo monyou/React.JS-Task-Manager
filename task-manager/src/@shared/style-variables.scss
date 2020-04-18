@@ -1,0 +1,29 @@
+$primary-color: #00a6c0;
+$secondary-color: #a5e65a;
+
+@mixin basic-button {
+    display: block;
+    position: relative;
+    margin: 0 auto;
+    width: 182px;
+    border: none;
+    border-radius: 10px;
+    text-transform: uppercase;
+    padding: 14px 0;
+    font-weight: 400;
+    font-size: 18px;
+    font-family: 'Source Sans Pro', sans-serif;
+    letter-spacing: 0.1em;
+    text-align: center;
+    color: white;
+    background-color: $primary-color;
+    outline: none;
+    transition: background-color .5s ease;
+    cursor: pointer;
+
+    &:focus,
+    &:hover,
+    &:active {
+        background-color: $secondary-color;
+    }
+}
