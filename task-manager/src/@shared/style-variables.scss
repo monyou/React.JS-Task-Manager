@@ -27,3 +27,21 @@ $secondary-color: #a5e65a;
         background-color: $secondary-color;
     }
 }
+
+@mixin basic-form-input {
+    display: block;
+    width: 182px;
+    font-size: 20px;
+    padding: 14px 0;
+    color: $primary-color;
+    padding-left: 15px;
+    border: 2px solid $primary-color;
+    border-radius: 10px;
+    outline: none;
+
+    &::-webkit-input-placeholder {
+        font-size: 16px;
+        font-weight: 700;
+        color: rgba(#6a888c, 0.5);
+    }
+}
