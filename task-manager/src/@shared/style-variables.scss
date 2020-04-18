@@ -32,16 +32,16 @@ $secondary-color: #a5e65a;
     display: block;
     width: 182px;
     font-size: 20px;
-    padding: 14px 0;
+    padding: 10px 0;
     color: $primary-color;
-    padding-left: 15px;
+    padding-left: 14px;
     border: 2px solid $primary-color;
     border-radius: 10px;
     outline: none;
 
     &::-webkit-input-placeholder {
         font-size: 16px;
-        font-weight: 700;
+        font-weight: 400;
         color: rgba(#6a888c, 0.5);
     }
 }
