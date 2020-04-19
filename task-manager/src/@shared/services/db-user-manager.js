@@ -18,6 +18,10 @@ export default class DBUserManager {
         }
     }
 
+    getAll() {
+        return this.users;
+    }
+
     add(user) {
         if (user instanceof UserModel) {
             if (this.users.find(u => u.email === user.email)) {

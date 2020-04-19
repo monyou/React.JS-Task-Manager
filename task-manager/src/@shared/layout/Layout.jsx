@@ -8,6 +8,7 @@ import Register from '../../@modules/auth/register/Register';
 import DBAuthManager from '../services/db-auth-manager';
 import { Dash as AdminDash } from '../../@modules/admin/dashboard/Dash';
 import { Dash as UserDash } from '../../@modules/user/dashboard/Dash';
+import ManageUsers from '../../@modules/admin/manage-users/ManageUsers';
 
 export default class Layout extends React.Component {
     constructor() {
@@ -19,6 +20,7 @@ export default class Layout extends React.Component {
         this.loadSidebarContent = loadSidebarContent.bind(this);
         this.logout = logout.bind(this);
         this.navigateToPage = navigateToPage.bind(this);
+        this.addNewButton = addNewButton.bind(this);
     }
 
     render() {
@@ -29,6 +31,7 @@ export default class Layout extends React.Component {
                 <div className="topbar">
                     {this.menuOrHomeIcon()}
                     {this.createLabelForTopbar()}
+                    {this.addNewButton()}
                 </div>
                 <div className="sidebar">
                     {this.loadSidebarContent()}
@@ -39,6 +42,7 @@ export default class Layout extends React.Component {
                         <Route path="/auth/login" component={Login} />
                         <Route path="/auth/register" component={Register} />
                         <Route path="/admin/dashboard" component={AdminDash} />
+                        <Route path="/admin/manage-users" component={ManageUsers} />
                         <Route path="/user/dashboard" component={UserDash} />
                         <Route component={NotFound} />
                     </Switch>
@@ -46,8 +50,6 @@ export default class Layout extends React.Component {
             </div>
         );
     }
-
-
 }
 
 function menuOrHomeIcon() {
@@ -55,6 +57,12 @@ function menuOrHomeIcon() {
         return <div className="action-icon" onClick={(e) => this.toggleSidebar(e)}><i className="fas fa-bars"></i></div>;
     } else {
         return <div className="action-icon" onClick={() => this.props.history.push('/home')}><i className="fas fa-home"></i></div>;
+    }
+}
+
+function addNewButton() {
+    if (this.authManager.isLogged && this.props.location.pathname === '/admin/manage-users') {
+        return <div className="add-new-user-btn"><i className="fas fa-user-plus"></i></div>;
     }
 }
 
@@ -87,7 +95,7 @@ function loadSidebarContent() {
                     <i className="fas fa-tasks"></i>
                     <span className='link'>Manage Tasks</span>
                 </div>
-                <div className="item" onClick={() => this.navigateToPage('/admin/dashboard')}>
+                <div className="item" onClick={() => this.navigateToPage('/admin/manage-users')}>
                     <i className="fas fa-user-cog"></i>
                     <span className='link'>Manager Users</span>
                 </div>
@@ -131,6 +139,9 @@ function createLabelForTopbar() {
             break;
         case '/admin/dashboard':
             name = 'Dashboard';
+            break;
+        case '/admin/manage-users':
+            name = 'Manage Users';
             break;
         case '/user/dashboard':
             name = 'Dashboard';

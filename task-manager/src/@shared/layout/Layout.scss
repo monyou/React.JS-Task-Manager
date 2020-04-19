@@ -6,14 +6,14 @@
 
     .topbar {
         position: relative;
-        width: 100%;
         height: 48px;
         background-image: linear-gradient(to right, $primary-color, $secondary-color);
         display: flex;
         align-items: center;
+        padding: 0px 22px;
 
-        .action-icon {
-            margin-left: 22px;
+        .action-icon,
+        .add-new-user-btn {
             margin-top: 1px;
             width: 16px;
             color: white;
@@ -25,13 +25,17 @@
             color: white;
             text-transform: uppercase;
         }
+
+        .add-new-user-btn {
+            margin-left: auto;
+        }
     }
 
     .sidebar {
-        position: relative;
+        position: absolute;
         display: none;
         z-index: 1000;
-        top: 0;
+        top: 48px;
         left: 0;
         width: 0px;
         height: 100%;
@@ -42,7 +46,7 @@
             position: fixed;
             z-index: 1000;
             margin-left: 250px;
-            width: 110px;
+            width: 100%;
             height: 100%;
             background-color: rgba($color: $primary-color, $alpha: 0.12);
         }
@@ -56,6 +60,7 @@
                 padding: 22px 0;
                 padding-left: 18px;
                 border-bottom: 1px solid rgba($color: $primary-color, $alpha: 0.2);
+                cursor: pointer;
 
                 &:focus,
                 &:hover,
