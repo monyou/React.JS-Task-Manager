@@ -7,7 +7,7 @@ export default class NotFound extends React.Component {
             <div className="not-found">
                 <img src='./assets/images/404-not-found.png' alt='not-found-img' useMap='#goHomeMap' />
                 <map name="goHomeMap">
-                    <area shape="rect" coords="167,72,307,110" alt="go-home" href="/" />
+                    <area shape="rect" coords="167,72,307,110" alt="go-home" href="/home" />
                 </map>
             </div>
         );

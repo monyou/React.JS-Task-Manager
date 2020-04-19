@@ -30,8 +30,9 @@ $secondary-color: #a5e65a;
 
 @mixin basic-form-input {
     display: block;
-    width: 182px;
-    font-size: 20px;
+    width: 80%;
+    font-size: 16px;
+    font-size: 400;
     padding: 10px 0;
     color: $primary-color;
     padding-left: 14px;

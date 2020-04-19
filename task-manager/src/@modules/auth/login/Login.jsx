@@ -1,20 +1,23 @@
 import React from 'react';
 import './Login.scss';
+import DBAuthManager from '../../../@shared/services/db-auth-manager';
 
 export default class Login extends React.Component {
     constructor(props) {
         super(props);
+        this.authManager = new DBAuthManager();
         this.emailRef = React.createRef();
         this.passRef = React.createRef();
+        this.login = login.bind(this);
     }
 
     render() {
         return (
             <div className="login">
                 <img className="logo" src="/assets/images/logo512.png" alt="logo" />
-                <form className="login-form" onSubmit={(e) => login(e, this)}>
-                    <input type="email" name="email" placeholder="Email" ref={this.emailRef} />
-                    <input type="password" name="password" placeholder="Password" ref={this.passRef} />
+                <form className="login-form" onSubmit={(e) => this.login(e)}>
+                    <input type="email" name="email" placeholder="Email" ref={this.emailRef} required />
+                    <input type="password" name="password" placeholder="Password" ref={this.passRef} required />
                     <input className="btn-login" type="submit" value="Login" />
                 </form>
             </div>
@@ -22,8 +25,23 @@ export default class Login extends React.Component {
     }
 }
 
-function login(e, pageData) {
+function login(e) {
     e.preventDefault();
-    let email = pageData.emailRef.current.value;
-    let password = pageData.passRef.current.value;
+    let email = this.emailRef.current.value;
+    let password = this.passRef.current.value;
+
+    if (this.authManager.logIn(email, password)) {
+        switch (this.authManager.loggedUserRole) {
+            case 'admin':
+                this.props.history.push('/admin/dashboard');
+                break;
+            case 'user':
+                this.props.history.push('/user/dashboard');
+                break;
+            default:
+                break;
+        }
+    } else {
+        alert('No such user found with these credentials!');
+    }
 }
