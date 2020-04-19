@@ -1,11 +1,11 @@
 import React from 'react';
 import './Login.scss';
+import { connect } from 'react-redux';
 import DBAuthManager from '../../../@shared/services/db-auth-manager';
 
-export default class Login extends React.Component {
-    constructor(props) {
-        super(props);
-        this.authManager = new DBAuthManager();
+class Login extends React.Component {
+    constructor() {
+        super();
         this.emailRef = React.createRef();
         this.passRef = React.createRef();
         this.login = login.bind(this);
@@ -25,17 +25,28 @@ export default class Login extends React.Component {
     }
 }
 
+export default connect()(Login);
+
 function login(e) {
     e.preventDefault();
     let email = this.emailRef.current.value;
     let password = this.passRef.current.value;
 
-    if (this.authManager.logIn(email, password)) {
-        switch (this.authManager.loggedUserRole) {
+    let loggedUserRole = DBAuthManager.logIn(email, password);
+    if (loggedUserRole) {
+        switch (loggedUserRole) {
             case 'admin':
+                this.props.dispatch({
+                    type: 'LOGIN_USER',
+                    userRole: 'admin'
+                });
                 this.props.history.push('/admin/dashboard');
                 break;
             case 'user':
+                this.props.dispatch({
+                    type: 'LOGIN_USER',
+                    userRole: 'admin'
+                });
                 this.props.history.push('/user/dashboard');
                 break;
             default:

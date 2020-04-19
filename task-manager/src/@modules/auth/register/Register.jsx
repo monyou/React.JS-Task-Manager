@@ -2,11 +2,11 @@ import React from 'react';
 import './Register.scss';
 import DBAuthManager from '../../../@shared/services/db-auth-manager';
 import UserModel from '../../../@shared/models/user.model';
+import { connect } from 'react-redux';
 
-export default class Register extends React.Component {
-    constructor(props) {
-        super(props);
-        this.authManager = new DBAuthManager();
+class Register extends React.Component {
+    constructor() {
+        super();
         this.namesRef = React.createRef();
         this.emailRef = React.createRef();
         this.passRef = React.createRef();
@@ -30,6 +30,8 @@ export default class Register extends React.Component {
     }
 }
 
+export default connect()(Register);
+
 function register(e) {
     e.preventDefault();
     let names = this.namesRef.current.value;
@@ -44,7 +46,11 @@ function register(e) {
             names
         );
 
-        if (this.authManager.registerUser(user)) {
+        if (DBAuthManager.registerUser(user)) {
+            this.props.dispatch({
+                type: 'LOGIN_USER',
+                userRole: 'user'
+            });
             this.props.history.push('/user/dashboard');
         } else {
             alert('User with this email already exists!');

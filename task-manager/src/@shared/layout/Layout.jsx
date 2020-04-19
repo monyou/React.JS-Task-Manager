@@ -1,19 +1,18 @@
 import React from 'react';
 import './Layout.scss';
 import { Switch, Route } from "react-router-dom";
+import { connect } from "react-redux";
 import NotFound from '../not-found/NotFound';
 import Home from '../../@modules/home/Home';
 import Login from '../../@modules/auth/login/Login';
 import Register from '../../@modules/auth/register/Register';
-import DBAuthManager from '../services/db-auth-manager';
 import { Dash as AdminDash } from '../../@modules/admin/dashboard/Dash';
 import { Dash as UserDash } from '../../@modules/user/dashboard/Dash';
 import ManageUsers from '../../@modules/admin/manage-users/ManageUsers';
 
-export default class Layout extends React.Component {
+class Layout extends React.Component {
     constructor() {
         super();
-        this.authManager = new DBAuthManager();
         this.menuOrHomeIcon = menuOrHomeIcon.bind(this);
         this.createLabelForTopbar = createLabelForTopbar.bind(this);
         this.toggleSidebar = toggleSidebar.bind(this);
@@ -24,8 +23,6 @@ export default class Layout extends React.Component {
     }
 
     render() {
-        this.authManager = new DBAuthManager();
-
         return (
             <div className="layout">
                 <div className="topbar">
@@ -52,39 +49,46 @@ export default class Layout extends React.Component {
     }
 }
 
+export default connect((state) => {
+    return {
+        isLogged: state.isLogged,
+        loggedUserRole: state.loggedUserRole,
+        sidebarOpened: state.sidebarOpened
+    }
+})(Layout);
+
 function menuOrHomeIcon() {
-    if (this.authManager.isLogged) {
-        return <div className="action-icon" onClick={(e) => this.toggleSidebar(e)}><i className="fas fa-bars"></i></div>;
+    if (this.props.isLogged && !this.props.sidebarOpened) {
+        return <div className="action-icon" onClick={() => this.toggleSidebar()}><i className="fas fa-bars"></i></div>;
+    } else if (this.props.isLogged && this.props.sidebarOpened) {
+        return <div className="action-icon" onClick={() => this.toggleSidebar()}><i className="fas fa-times"></i></div>;
     } else {
         return <div className="action-icon" onClick={() => this.props.history.push('/home')}><i className="fas fa-home"></i></div>;
     }
 }
 
 function addNewButton() {
-    if (this.authManager.isLogged && this.props.location.pathname === '/admin/manage-users') {
+    if (this.props.isLogged && this.props.location.pathname === '/admin/manage-users') {
         return <div className="add-new-user-btn"><i className="fas fa-user-plus"></i></div>;
     }
 }
 
-function toggleSidebar(e) {
-    let iconParent = e.target.parentNode;
+function toggleSidebar() {
+    this.props.dispatch({
+        type: 'TOGGLE_SIDEBAR'
+    });
     let sidebar = document.querySelector('.layout .sidebar');
     if (sidebar.style.width === '250px') {
-        iconParent.innerHTML = '<i class="fas fa-bars"></i>';
         sidebar.style.display = 'none';
         sidebar.style.width = '0px';
     } else {
-        iconParent.innerHTML = '<i class="fas fa-times"></i>';
         sidebar.style.display = 'block';
         sidebar.style.width = '250px';
-    }
-    if (!this.authManager.isLogged) {
-        iconParent.innerHTML = '<i class="fas fa-home"></i>';
     }
 }
 
 function loadSidebarContent() {
-    if (this.authManager.isAdmin()) {
+    if (this.props.loggedUserRole === 'admin') {
         return (
             <div className='menu-items'>
                 <div className="item" onClick={() => this.navigateToPage('/admin/dashboard')}>
@@ -125,7 +129,7 @@ function createLabelForTopbar() {
     let name = null;
     switch (this.props.location.pathname) {
         case '/home':
-            if (this.authManager.isLogged) {
+            if (this.props.isLogged) {
                 name = "Menu"
             } else {
                 name = 'Welcome';
@@ -154,12 +158,21 @@ function createLabelForTopbar() {
 }
 
 function navigateToPage(route) {
+    this.props.dispatch({
+        type: 'TOGGLE_SIDEBAR'
+    });
+    let sidebar = document.querySelector('.layout .sidebar');
+    sidebar.style.display = 'none';
+    sidebar.style.width = '0px';
     this.props.history.push(route);
-    document.querySelector('.layout .topbar .action-icon i').click();
 }
 
 function logout() {
-    this.authManager.logOut();
-    this.props.history.replace('/home');
-    document.querySelector('.layout .topbar .action-icon i').click();
+    this.props.dispatch({
+        type: 'LOGOUT_USER'
+    });
+    let sidebar = document.querySelector('.layout .sidebar');
+    sidebar.style.display = 'none';
+    sidebar.style.width = '0px';
+    this.props.history.push('/home');
 }
