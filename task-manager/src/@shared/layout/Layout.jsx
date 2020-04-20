@@ -6,9 +6,10 @@ import NotFound from '../not-found/NotFound';
 import Home from '../../@modules/home/Home';
 import Login from '../../@modules/auth/login/Login';
 import Register from '../../@modules/auth/register/Register';
-import { Dash as AdminDash } from '../../@modules/admin/dashboard/Dash';
-import { Dash as UserDash } from '../../@modules/user/dashboard/Dash';
 import ManageUsers from '../../@modules/admin/manage-users/ManageUsers';
+import AddUser from '../../@modules/admin/add-user/AddUser';
+import AdminDash from '../../@modules/admin/dashboard/Dash';
+import UserDash from '../../@modules/user/dashboard/Dash';
 
 class Layout extends React.Component {
     constructor() {
@@ -43,6 +44,7 @@ class Layout extends React.Component {
                         <Route path="/auth/register" component={Register} />
                         <Route path="/admin/dashboard" component={AdminDash} />
                         <Route path="/admin/manage-users" component={ManageUsers} />
+                        <Route path="/admin/add-user" component={AddUser} />
                         <Route path="/user/dashboard" component={UserDash} />
                         <Route component={NotFound} />
                     </Switch>
@@ -70,8 +72,19 @@ function menuOrHomeIcon() {
 }
 
 function addNewButton() {
-    if (this.props.isLogged && this.props.location.pathname === '/admin/manage-users') {
-        return <div className="add-new-user-btn"><i className="fas fa-user-plus"></i></div>;
+    if (this.props.isLogged) {
+        if (this.props.location.pathname === '/admin/manage-users') {
+            return (
+                <div className="add-new-user-btn" onClick={() => this.props.history.push('/admin/add-user')}>
+                    <i className="fas fa-user-plus"></i>
+                    <span className='tooltip'>Create user</span>
+                </div>
+            );
+        }
+        if (this.props.location.pathname === '/user/dashboard') {
+            // TODO: change when user has method to add user
+            // return <div className="add-new-user-btn" onClick={() => this.props.history.push('/admin/add-user')}><i className="fas fa-user-plus"></i></div>;
+        }
     }
 }
 
@@ -148,6 +161,9 @@ function createLabelForTopbar() {
             break;
         case '/admin/manage-users':
             name = 'Manage Users';
+            break;
+        case '/admin/add-user':
+            name = 'Add User';
             break;
         case '/user/dashboard':
             name = 'Dashboard';

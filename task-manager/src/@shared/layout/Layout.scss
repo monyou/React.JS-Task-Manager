@@ -28,7 +28,17 @@
         }
 
         .add-new-user-btn {
+            position: relative;
             margin-left: auto;
+
+            &:hover .tooltip {
+                visibility: visible;
+                opacity: 1;
+            }
+
+            .tooltip {
+                @include tooltip(left);
+            }
         }
     }
 
