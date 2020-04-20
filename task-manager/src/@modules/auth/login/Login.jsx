@@ -32,7 +32,7 @@ function login(e) {
     let email = this.emailRef.current.value;
     let password = this.passRef.current.value;
 
-    let loggedUserRole = DBAuthManager.logIn(email, password);
+    let loggedUserRole = DBAuthManager.login(email, password);
     if (loggedUserRole) {
         switch (loggedUserRole) {
             case 'admin':
@@ -45,7 +45,7 @@ function login(e) {
             case 'user':
                 this.props.dispatch({
                     type: 'LOGIN_USER',
-                    userRole: 'admin'
+                    userRole: 'user'
                 });
                 this.props.history.push('/user/dashboard');
                 break;

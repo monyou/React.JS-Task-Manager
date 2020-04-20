@@ -13,6 +13,9 @@ import ManageUsers from '../../@modules/admin/manage-users/ManageUsers';
 class Layout extends React.Component {
     constructor() {
         super();
+        this.state = {
+            sidebarOpened: false
+        };
         this.menuOrHomeIcon = menuOrHomeIcon.bind(this);
         this.createLabelForTopbar = createLabelForTopbar.bind(this);
         this.toggleSidebar = toggleSidebar.bind(this);
@@ -53,14 +56,13 @@ export default connect((state) => {
     return {
         isLogged: state.isLogged,
         loggedUserRole: state.loggedUserRole,
-        sidebarOpened: state.sidebarOpened
     }
 })(Layout);
 
 function menuOrHomeIcon() {
-    if (this.props.isLogged && !this.props.sidebarOpened) {
+    if (this.props.isLogged && !this.state.sidebarOpened) {
         return <div className="action-icon" onClick={() => this.toggleSidebar()}><i className="fas fa-bars"></i></div>;
-    } else if (this.props.isLogged && this.props.sidebarOpened) {
+    } else if (this.props.isLogged && this.state.sidebarOpened) {
         return <div className="action-icon" onClick={() => this.toggleSidebar()}><i className="fas fa-times"></i></div>;
     } else {
         return <div className="action-icon" onClick={() => this.props.history.push('/home')}><i className="fas fa-home"></i></div>;
@@ -74,9 +76,9 @@ function addNewButton() {
 }
 
 function toggleSidebar() {
-    this.props.dispatch({
-        type: 'TOGGLE_SIDEBAR'
-    });
+    this.setState(state => ({
+        sidebarOpened: !state.sidebarOpened
+    }));
     let sidebar = document.querySelector('.layout .sidebar');
     if (sidebar.style.width === '250px') {
         sidebar.style.display = 'none';
@@ -158,9 +160,9 @@ function createLabelForTopbar() {
 }
 
 function navigateToPage(route) {
-    this.props.dispatch({
-        type: 'TOGGLE_SIDEBAR'
-    });
+    this.setState(state => ({
+        sidebarOpened: !state.sidebarOpened
+    }));
     let sidebar = document.querySelector('.layout .sidebar');
     sidebar.style.display = 'none';
     sidebar.style.width = '0px';
@@ -168,6 +170,9 @@ function navigateToPage(route) {
 }
 
 function logout() {
+    this.setState(state => ({
+        sidebarOpened: !state.sidebarOpened
+    }));
     this.props.dispatch({
         type: 'LOGOUT_USER'
     });

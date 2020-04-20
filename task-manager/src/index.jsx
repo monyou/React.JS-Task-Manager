@@ -8,7 +8,7 @@ import { createStore } from 'redux';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Redirect } from "react-router-dom";
 import Layout from './@shared/layout/Layout';
-import UserModel from './@shared/models/user.model';
+import DBUserManager from './@shared/services/db-user-manager';
 
 //Redux store implemented
 const store = createStore(reducer);
@@ -21,6 +21,6 @@ ReactDOM.render(
 );
 
 // Seed db tables
-localStorage.setItem('users', JSON.stringify([new UserModel('admin@admin.com', 'admin123', 'Admin Admin', 'admin')]));
+DBUserManager.seedTableData();
 
 serviceWorker.register();

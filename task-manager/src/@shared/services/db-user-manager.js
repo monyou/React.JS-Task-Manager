@@ -57,4 +57,10 @@ export default class DBUserManager {
             alert('Wrong input types!');
         }
     }
+
+    static seedTableData() {
+        if (!localStorage.getItem('users')) {
+            localStorage.setItem('users', JSON.stringify([new UserModel('admin@admin.com', 'admin123', 'Admin Admin', 'admin')]));
+        }
+    }
 }

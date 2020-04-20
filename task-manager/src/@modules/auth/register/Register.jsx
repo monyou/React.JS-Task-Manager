@@ -46,7 +46,7 @@ function register(e) {
             names
         );
 
-        if (DBAuthManager.registerUser(user)) {
+        if (DBAuthManager.register(user)) {
             this.props.dispatch({
                 type: 'LOGIN_USER',
                 userRole: 'user'

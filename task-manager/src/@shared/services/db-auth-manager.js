@@ -2,7 +2,7 @@ import DBUserManager from './db-user-manager';
 import UserModel from '../models/user.model';
 
 export default class DBAuthManager {
-    static logIn(userEmail, userPassword) {
+    static login(userEmail, userPassword) {
         if (typeof (userEmail, userPassword) === 'string') {
             let dbUserManager = new DBUserManager();
             let user = dbUserManager.getByEmail(userEmail);
@@ -20,7 +20,7 @@ export default class DBAuthManager {
         }
     }
 
-    static registerUser(user) {
+    static register(user) {
         if (user instanceof UserModel) {
             let dbUserManager = new DBUserManager();
             if (dbUserManager.add(user)) {
