@@ -1,6 +1,7 @@
 const initialState = {
     isLogged: false,
-    loggedUserRole: null,
+    loggedUser: null,
+    loggedUserRole: null
 }
 
 export default (state = initialState, action) => {
@@ -8,12 +9,14 @@ export default (state = initialState, action) => {
         case 'LOGIN_USER':
             return Object.assign({}, state, {
                 isLogged: true,
-                loggedUserRole: action.userRole
+                loggedUserRole: action.userRole,
+                loggedUser: action.userEmail
             });
         case 'LOGOUT_USER':
             return Object.assign({}, state, {
                 isLogged: false,
-                loggedUserRole: null
+                loggedUserRole: null,
+                loggedUser: null
             });
         default:
             return state;

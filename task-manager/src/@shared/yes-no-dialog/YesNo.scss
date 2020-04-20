@@ -1,0 +1,67 @@
+@import '../style-variables.scss';
+
+.yes-no-dialog {
+    position: absolute;
+    width: 276px;
+    top: 30%;
+    left: calc(50% - 150px);
+    text-align: center;
+    border: 2px solid $primary-color;
+    border-radius: 10px;
+    padding: 40px 10px;
+    background: white;
+    z-index: 5;
+
+    .title {
+        margin: 0;
+        color: $primary-color;
+        font-size: 16px;
+        font-weight: 400;
+    }
+
+    .actions {
+        display: flex;
+        width: 180px;
+        margin: 0 auto;
+        margin-top: 35px;
+        flex-flow: row nowrap;
+        justify-content: space-between;
+        align-items: center;
+
+        .btn-yes,
+        .btn-no {
+            width: 80px;
+            padding: 10px 0px;
+            border: none;
+            outline: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 300;
+
+            &:focus,
+            &:hover,
+            &:active {
+                background-color: $primary-color;
+            }
+        }
+
+        .btn-yes {
+            background-color: $secondary-color;
+        }
+
+        .btn-no {
+            background-color: #fd5858;
+        }
+    }
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 3;
+    background-color: rgba($color: #000000, $alpha: 0.3);
+}

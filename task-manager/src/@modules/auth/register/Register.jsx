@@ -49,7 +49,8 @@ function register(e) {
         if (DBAuthManager.register(user)) {
             this.props.dispatch({
                 type: 'LOGIN_USER',
-                userRole: 'user'
+                userRole: 'user',
+                userEmail: email
             });
             this.props.history.push('/user/dashboard');
         } else {

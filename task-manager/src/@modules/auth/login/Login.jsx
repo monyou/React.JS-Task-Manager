@@ -38,14 +38,16 @@ function login(e) {
             case 'admin':
                 this.props.dispatch({
                     type: 'LOGIN_USER',
-                    userRole: 'admin'
+                    userRole: 'admin',
+                    userEmail: email
                 });
                 this.props.history.push('/admin/dashboard');
                 break;
             case 'user':
                 this.props.dispatch({
                     type: 'LOGIN_USER',
-                    userRole: 'user'
+                    userRole: 'user',
+                    userEmail: email
                 });
                 this.props.history.push('/user/dashboard');
                 break;
