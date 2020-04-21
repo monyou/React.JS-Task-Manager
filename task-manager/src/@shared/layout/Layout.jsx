@@ -37,6 +37,7 @@ class Layout extends React.Component {
                 <div className="sidebar">
                     {this.loadSidebarContent()}
                 </div>
+                <div className="sidebar-backdrop"></div>
                 <div className="content">
                     <Switch>
                         <Route path="/home" component={Home} />
@@ -93,12 +94,15 @@ function toggleSidebar() {
         sidebarOpened: !state.sidebarOpened
     }));
     let sidebar = document.querySelector('.layout .sidebar');
-    if (sidebar.style.width === '250px') {
-        sidebar.style.display = 'none';
-        sidebar.style.width = '0px';
+    let sidebarBackdrop = document.querySelector('.layout .sidebar-backdrop');
+    if (sidebar.style.left === '0px') {
+        sidebar.style.left = '-251px';
+        sidebar.style.visibility = 'hidden';
+        sidebarBackdrop.style.visibility = 'hidden';
     } else {
-        sidebar.style.display = 'block';
-        sidebar.style.width = '250px';
+        sidebarBackdrop.style.visibility = 'visible';
+        sidebar.style.visibility = 'visible';
+        sidebar.style.left = '0px';
     }
 }
 
@@ -180,8 +184,10 @@ function navigateToPage(route) {
         sidebarOpened: !state.sidebarOpened
     }));
     let sidebar = document.querySelector('.layout .sidebar');
-    sidebar.style.display = 'none';
-    sidebar.style.width = '0px';
+    let sidebarBackdrop = document.querySelector('.layout .sidebar-backdrop');
+    sidebar.style.left = '-251px';
+    sidebar.style.visibility = 'hidden';
+    sidebarBackdrop.style.visibility = 'hidden';
     this.props.history.push(route);
 }
 
@@ -193,7 +199,9 @@ function logout() {
         type: 'LOGOUT_USER'
     });
     let sidebar = document.querySelector('.layout .sidebar');
-    sidebar.style.display = 'none';
-    sidebar.style.width = '0px';
+    let sidebarBackdrop = document.querySelector('.layout .sidebar-backdrop');
+    sidebar.style.left = '-251px';
+    sidebar.style.visibility = 'hidden';
+    sidebarBackdrop.style.visibility = 'hidden';
     this.props.history.push('/home');
 }
