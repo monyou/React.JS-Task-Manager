@@ -14,7 +14,7 @@ export default class DBUserManager {
                 return null;
             }
         } else {
-            alert('Wrong input types!');
+            return false;
         }
     }
 
@@ -32,15 +32,21 @@ export default class DBUserManager {
                 return true;
             }
         } else {
-            alert('Wrong input types!');
+            return false;
         }
     }
 
     edit(user) {
         if (user instanceof UserModel) {
-
+            let foundUser = this.getByEmail(user.oldEmail ? user.oldEmail : user.email);
+            if (user.password == null) {
+                user.password = foundUser.password;
+            }
+            this.users.splice(this.users.findIndex(u => u === foundUser), 1, user);
+            localStorage.setItem('users', JSON.stringify(this.users));
+            return true;
         } else {
-            alert('Wrong input types!');
+            return false;
         }
     }
 
@@ -54,13 +60,13 @@ export default class DBUserManager {
                 return false;
             }
         } else {
-            alert('Wrong input types!');
+            return false;
         }
     }
 
     static seedTableData() {
         if (!localStorage.getItem('users')) {
-            localStorage.setItem('users', JSON.stringify([new UserModel('admin@admin.com', 'admin123', 'Admin Admin', 'admin')]));
+            localStorage.setItem('users', JSON.stringify([new UserModel('admin@admin.com', 'admin123', 'Main Admin', 'admin')]));
         }
     }
 }

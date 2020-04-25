@@ -49,10 +49,10 @@ function renderUsers() {
                     }
                 </div>
                 <div className="names">
-                    {u.names}
+                    {u.names || 'Unknown'}
                 </div>
                 <div className="actions">
-                    <div className="edit">
+                    <div className="edit" onClick={() => this.props.history.push('/admin/edit-user', { email: u.email })}>
                         <i className="fas fa-user-edit"></i>
                         <span className='tooltip'>Edit user</span>
                     </div>

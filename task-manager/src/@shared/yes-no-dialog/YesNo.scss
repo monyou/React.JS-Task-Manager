@@ -4,12 +4,13 @@
     position: absolute;
     width: 276px;
     top: 30%;
-    left: calc(50% - 150px);
+    left: 50%;
     text-align: center;
     border: 2px solid $primary-color;
     border-radius: 10px;
     padding: 40px 10px;
     background: white;
+    transform: translateX(-50%);
     z-index: 5;
 
     .title {

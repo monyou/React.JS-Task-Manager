@@ -9,5 +9,6 @@ export default class UserModel {
         this.password = password;
         this.names = names;
         this.role = role;
+        this.oldEmail = null;
     }
 }

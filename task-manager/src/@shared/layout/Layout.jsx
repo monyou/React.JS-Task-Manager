@@ -10,6 +10,7 @@ import ManageUsers from '../../@modules/admin/manage-users/ManageUsers';
 import AddUser from '../../@modules/admin/add-user/AddUser';
 import AdminDash from '../../@modules/admin/dashboard/Dash';
 import UserDash from '../../@modules/user/dashboard/Dash';
+import EditUser from '../../@modules/admin/edit-user/EditUser';
 
 class Layout extends React.Component {
     constructor() {
@@ -46,6 +47,7 @@ class Layout extends React.Component {
                         <Route path="/admin/dashboard" component={AdminDash} />
                         <Route path="/admin/manage-users" component={ManageUsers} />
                         <Route path="/admin/add-user" component={AddUser} />
+                        <Route path="/admin/edit-user" component={EditUser} />
                         <Route path="/user/dashboard" component={UserDash} />
                         <Route component={NotFound} />
                     </Switch>
@@ -168,6 +170,9 @@ function createLabelForTopbar() {
             break;
         case '/admin/add-user':
             name = 'Add User';
+            break;
+        case '/admin/edit-user':
+            name = 'Edit User';
             break;
         case '/user/dashboard':
             name = 'Dashboard';
