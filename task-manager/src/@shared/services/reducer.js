@@ -1,10 +1,4 @@
-const initialState = {
-    isLogged: false,
-    loggedUser: null,
-    loggedUserRole: null
-}
-
-export default (state = initialState, action) => {
+export default (state = JSON.parse(localStorage.getItem('state')), action) => {
     switch (action.type) {
         case 'LOGIN_USER':
             return Object.assign({}, state, {

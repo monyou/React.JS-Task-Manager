@@ -1,6 +1,6 @@
 import React from 'react';
 import './Layout.scss';
-import { Switch, Route } from "react-router-dom";
+import { Switch, Route, Redirect } from "react-router-dom";
 import { connect } from "react-redux";
 import NotFound from '../not-found/NotFound';
 import Home from '../../@modules/home/Home';
@@ -11,6 +11,7 @@ import AddUser from '../../@modules/admin/add-user/AddUser';
 import AdminDash from '../../@modules/admin/dashboard/Dash';
 import UserDash from '../../@modules/user/dashboard/Dash';
 import EditUser from '../../@modules/admin/edit-user/EditUser';
+import AccessDenied from '../access-denied/AccessDenied';
 
 class Layout extends React.Component {
     constructor() {
@@ -18,6 +19,8 @@ class Layout extends React.Component {
         this.state = {
             sidebarOpened: false
         };
+        this.loadProtectedPage = loadProtectedPage.bind(this);
+        this.loadNotAuthPage = loadNotAuthPage.bind(this);
         this.menuOrHomeIcon = menuOrHomeIcon.bind(this);
         this.createLabelForTopbar = createLabelForTopbar.bind(this);
         this.toggleSidebar = toggleSidebar.bind(this);
@@ -41,14 +44,16 @@ class Layout extends React.Component {
                 <div className="sidebar-backdrop"></div>
                 <div className="content">
                     <Switch>
-                        <Route path="/home" component={Home} />
-                        <Route path="/auth/login" component={Login} />
-                        <Route path="/auth/register" component={Register} />
-                        <Route path="/admin/dashboard" component={AdminDash} />
-                        <Route path="/admin/manage-users" component={ManageUsers} />
-                        <Route path="/admin/add-user" component={AddUser} />
-                        <Route path="/admin/edit-user" component={EditUser} />
-                        <Route path="/user/dashboard" component={UserDash} />
+                        <Route path="/home" render={(props) => this.loadNotAuthPage(props, Home)} />
+                        <Route path="/auth/login" render={(props) => this.loadNotAuthPage(props, Login)} />
+                        <Route path="/auth/register" render={(props) => this.loadNotAuthPage(props, Register)} />
+                        <Route path="/admin/dashboard" render={(props) => this.loadProtectedPage(props, AdminDash, 'admin')} />
+                        <Route path="/admin/manage-users" render={(props) => this.loadProtectedPage(props, ManageUsers, 'admin')} />
+                        <Route path="/admin/add-user" render={(props) => this.loadProtectedPage(props, AddUser, 'admin')} />
+                        <Route path="/admin/edit-user" render={(props) => this.loadProtectedPage(props, EditUser, 'admin')} />
+                        <Route path="/user/dashboard" render={(props) => this.loadProtectedPage(props, UserDash, 'user')} />
+                        <Route path='/access-denied' component={AccessDenied} />
+                        <Redirect exact from="/" to="/home" />
                         <Route component={NotFound} />
                     </Switch>
                 </div>
@@ -63,6 +68,22 @@ export default connect((state) => {
         loggedUserRole: state.loggedUserRole,
     }
 })(Layout);
+
+function loadProtectedPage(props, Component, role) {
+    return (
+        this.props.isLogged === true && this.props.loggedUserRole === role
+            ? <Component {...props} />
+            : <Redirect to='/access-denied' />
+    );
+}
+
+function loadNotAuthPage(props, Component) {
+    return (
+        this.props.isLogged !== true
+            ? <Component {...props} />
+            : <Redirect to={`/${this.props.loggedUserRole}/dashboard`} />
+    );
+}
 
 function menuOrHomeIcon() {
     if (this.props.isLogged && !this.state.sidebarOpened) {
@@ -177,8 +198,11 @@ function createLabelForTopbar() {
         case '/user/dashboard':
             name = 'Dashboard';
             break;
+        case '/access-denied':
+            name = 'Access Denied'
+            break;
         default:
-            name = '';
+            name = 'Not Found';
             break;
     }
     return <div className="screen-label">{name}</div>;

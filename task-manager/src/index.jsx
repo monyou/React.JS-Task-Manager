@@ -6,16 +6,26 @@ import * as serviceWorker from './serviceWorker';
 import reducer from './@shared/services/reducer';
 import { createStore } from 'redux';
 import { Provider } from 'react-redux';
-import { BrowserRouter, Route, Redirect } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import Layout from './@shared/layout/Layout';
 import DBUserManager from './@shared/services/db-user-manager';
 
 //Redux store implemented
+const initialState = {
+  isLogged: false,
+  loggedUser: null,
+  loggedUserRole: null
+};
+if (!localStorage.getItem('state')) {
+  localStorage.setItem('state', JSON.stringify(initialState));
+}
 const store = createStore(reducer);
+store.subscribe(() => {
+  localStorage.setItem('state', JSON.stringify(store.getState()));
+});
 ReactDOM.render(
   <BrowserRouter>
     <Route path="/" render={(props) => <Provider store={store}><Layout {...props} /></Provider>} />
-    <Redirect from="/" to="/home" />
   </BrowserRouter>,
   document.getElementById('root')
 );
