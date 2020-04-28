@@ -7,14 +7,26 @@ export default class EditUser extends React.Component {
     constructor(props) {
         super(props);
         let dbUserManager = new DBUserManager();
-        let user = dbUserManager.getByEmail(this.props.location.state.email);
+        dbUserManager.getByEmail(this.props.location.state.email).then(
+            result => {
+                this.setState({
+                    newUser: {
+                        email: result.email,
+                        names: result.names,
+                        pass: '',
+                        repPass: '',
+                        isAdmin: result.role === 'admin' ? true : false,
+                    }
+                });
+            }
+        );
         this.state = {
             newUser: {
-                email: user.email,
-                names: user.names,
+                email: '',
+                names: '',
                 pass: '',
                 repPass: '',
-                isAdmin: user.role === 'admin' ? true : false,
+                isAdmin: false,
             }
         };
         this.onInputChange = onInputChange.bind(this);
@@ -55,7 +67,7 @@ function onInputChange(e) {
     });
 }
 
-function editUser(e) {
+async function editUser(e) {
     e.preventDefault();
     let oldEmail = this.props.location.state.email;
     let newNames = this.state.newUser.names;
@@ -76,12 +88,10 @@ function editUser(e) {
         newIsAdmin ? 'admin' : 'user'
     );
 
-    if (oldEmail !== newEmail) {
-        user.oldEmail = oldEmail;
-    }
+    let editEmail = oldEmail !== newEmail ? oldEmail : null;
 
     let dbUserManager = new DBUserManager();
-    if (dbUserManager.edit(user)) {
+    if (await dbUserManager.edit(user, editEmail)) {
         this.props.history.push('/admin/manage-users');
     } else {
         alert('The user was NOT edited!');

@@ -33,7 +33,7 @@ export default class AddUser extends React.Component {
     }
 }
 
-function createUser(e) {
+async function createUser(e) {
     e.preventDefault();
     let names = this.namesRef.current.value;
     let email = this.emailRef.current.value;
@@ -49,7 +49,7 @@ function createUser(e) {
             isAdmin ? 'admin' : 'user'
         );
 
-        if (DBAuthManager.register(user)) {
+        if (await DBAuthManager.register(user)) {
             this.props.history.push('/admin/manage-users');
         } else {
             alert('User with this email already exists!');

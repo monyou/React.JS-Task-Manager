@@ -1,72 +1,78 @@
 import UserModel from "../models/user.model";
+import firebase from './firebase';
 
 export default class DBUserManager {
     constructor() {
-        this.users = JSON.parse(localStorage.getItem('users'));
+        this.users = firebase.firestore().collection('users');
     }
 
-    getByEmail(userEmail) {
-        if (typeof (userEmail) === 'string') {
-            let userFound = this.users.find(u => u.email === userEmail);
-            if (userFound) {
-                return userFound;
-            } else {
-                return null;
+    async getByEmail(userEmail) {
+        return this.users.where('email', '==', userEmail).get().then(
+            result => {
+                if (result.docs.length === 1) {
+                    let user = result.docs[0].data();
+                    let mappedUser = new UserModel(user.email, user.password, user.names, user.role);
+                    mappedUser.id = result.docs[0].id;
+                    return mappedUser;
+                } else {
+                    return null;
+                }
             }
-        } else {
-            return false;
-        }
+        );
     }
 
-    getAll() {
-        return this.users;
-    }
-
-    add(user) {
-        if (user instanceof UserModel) {
-            if (this.users.find(u => u.email === user.email)) {
-                return false;
-            } else {
-                this.users.push(user);
-                localStorage.setItem('users', JSON.stringify(this.users));
-                return true;
+    async getAll() {
+        return this.users.get().then(
+            result => {
+                let mappedUsers = result.docs.map(doc => new UserModel(doc.data().email, doc.data().password, doc.data().names, doc.data().role));
+                return mappedUsers;
             }
-        } else {
-            return false;
-        }
+        );
     }
 
-    edit(user) {
-        if (user instanceof UserModel) {
-            let foundUser = this.getByEmail(user.oldEmail ? user.oldEmail : user.email);
-            if (user.password == null) {
-                user.password = foundUser.password;
+    async add(user) {
+        return this.getByEmail(user.email).then(
+            result => {
+                if (result) {
+                    return false;
+                } else {
+                    this.users.add({
+                        ...user
+                    });
+                    return true;
+                }
             }
-            this.users.splice(this.users.findIndex(u => u === foundUser), 1, user);
-            localStorage.setItem('users', JSON.stringify(this.users));
-            return true;
-        } else {
-            return false;
-        }
+        );
     }
 
-    remove(userEmail) {
-        if (typeof (userEmail) === 'string') {
-            if (this.users.find(u => u.email === userEmail)) {
-                this.users.splice(this.users.findIndex(u => u.email === userEmail), 1);
-                localStorage.setItem('users', JSON.stringify(this.users));
-                return true;
-            } else {
-                return false;
+    async edit(user, oldEmail = null) {
+        return this.getByEmail(oldEmail ? oldEmail : user.email).then(
+            result => {
+                if (result) {
+                    if (user.password == null) {
+                        user.password = result.password;
+                    }
+                    this.users.doc(result.id).update({
+                        ...user
+                    });
+                    return true;
+                } else {
+                    return false;
+                }
             }
-        } else {
-            return false;
-        }
+        );
     }
 
-    static seedTableData() {
-        if (!localStorage.getItem('users')) {
-            localStorage.setItem('users', JSON.stringify([new UserModel('admin@admin.com', 'admin123', 'Main Admin', 'admin')]));
-        }
+    async remove(userEmail) {
+        return this.getByEmail(userEmail).then(
+            result => {
+                if (result) {
+                    this.users.doc(result.id).delete();
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        );
     }
 }

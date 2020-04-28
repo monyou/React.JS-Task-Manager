@@ -8,8 +8,15 @@ class ManageUsers extends React.Component {
     constructor() {
         super();
         this.dbUserManager = new DBUserManager();
+        this.dbUserManager.getAll().then(
+            result => {
+                this.setState({
+                    users: result
+                });
+            }
+        );
         this.state = {
-            users: this.dbUserManager.getAll(),
+            users: [],
             showRemoveUserDialog: false
         };
         this.renderUsers = renderUsers.bind(this);
@@ -84,9 +91,8 @@ function closeRemoveUserDialog() {
     });
 }
 
-function removeUser() {
-    this.dbUserManager = new DBUserManager();
-    let userRemoved = this.dbUserManager.remove(this.state.userToRemove);
+async function removeUser() {
+    let userRemoved = await this.dbUserManager.remove(this.state.userToRemove);
     if (userRemoved) {
         this.setState(state => ({
             users: state.users.filter(u => u.email !== this.state.userToRemove),

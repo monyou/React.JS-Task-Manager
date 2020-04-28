@@ -27,12 +27,13 @@ class Login extends React.Component {
 
 export default connect()(Login);
 
-function login(e) {
+async function login(e) {
     e.preventDefault();
     let email = this.emailRef.current.value;
     let password = this.passRef.current.value;
 
-    let loggedUserRole = DBAuthManager.login(email, password);
+    let loggedUserRole = await DBAuthManager.login(email, password);
+
     if (loggedUserRole) {
         switch (loggedUserRole) {
             case 'admin':

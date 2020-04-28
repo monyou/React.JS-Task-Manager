@@ -32,7 +32,7 @@ class Register extends React.Component {
 
 export default connect()(Register);
 
-function register(e) {
+async function register(e) {
     e.preventDefault();
     let names = this.namesRef.current.value;
     let email = this.emailRef.current.value;
@@ -46,7 +46,7 @@ function register(e) {
             names
         );
 
-        if (DBAuthManager.register(user)) {
+        if (await DBAuthManager.register(user)) {
             this.props.dispatch({
                 type: 'LOGIN_USER',
                 userRole: 'user',
