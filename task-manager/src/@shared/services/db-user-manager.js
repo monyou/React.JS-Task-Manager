@@ -4,6 +4,7 @@ import firebase from './firebase';
 export default class DBUserManager {
     constructor() {
         this.users = firebase.firestore().collection('users');
+        this.tasks = firebase.firestore().collection('tasks');
     }
 
     async getByEmail(userEmail) {
@@ -68,6 +69,17 @@ export default class DBUserManager {
             result => {
                 if (result) {
                     this.users.doc(result.id).delete();
+                    return this.tasks.where("createdBy", "==", result.id).get();
+                } else {
+                    return false;
+                }
+            }
+        ).then(
+            result => {
+                if (result) {
+                    result.docs.forEach(t => {
+                        this.tasks.doc(t.id).delete();
+                    });
                     return true;
                 } else {
                     return false;
