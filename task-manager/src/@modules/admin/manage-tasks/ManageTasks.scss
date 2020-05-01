@@ -1,0 +1,80 @@
+@import "../../../@shared/style-variables.scss";
+
+.manage-tasks {
+
+    .tasks-list {
+
+        .item {
+            padding: 22px 18px;
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            border-bottom: 1px solid rgba($color: #3abc9c, $alpha: 0.3);
+
+            .status {
+                position: relative;
+
+                &:hover .tooltip {
+                    visibility: visible;
+                    opacity: 1;
+                }
+
+                .tooltip {
+                    @include tooltip(right);
+                }
+            }
+
+            i {
+                color: #3fbe99;
+                width: 21px;
+            }
+
+            .title {
+                margin-left: 10px;
+                font-size: 16px;
+                color: #454545;
+                font-weight: 300;
+            }
+
+            .actions {
+                width: 60px;
+                display: flex;
+                margin-left: auto;
+                align-content: center;
+                justify-content: space-around;
+
+                i {
+                    cursor: pointer;
+                }
+
+                .edit,
+                .remove {
+                    position: relative;
+
+                    &:hover .tooltip {
+                        visibility: visible;
+                        opacity: 1;
+                    }
+
+                    .tooltip {
+                        @include tooltip(left);
+                    }
+                }
+
+                .edit {
+
+                    i {
+                        color: #3fbe99;
+                    }
+                }
+
+                .remove {
+
+                    i {
+                        color: #fc4b4b;
+                    }
+                }
+            }
+        }
+    }
+}

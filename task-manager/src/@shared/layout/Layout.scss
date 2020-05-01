@@ -11,7 +11,8 @@
         padding: 0px 22px;
 
         .action-icon,
-        .add-new-user-btn {
+        .add-new-user-btn,
+        .add-new-task-btn {
             cursor: pointer;
             margin-top: 1px;
             width: 16px;
@@ -25,7 +26,8 @@
             text-transform: uppercase;
         }
 
-        .add-new-user-btn {
+        .add-new-user-btn,
+        .add-new-task-btn {
             position: relative;
             margin-left: auto;
 

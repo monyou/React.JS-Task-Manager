@@ -1,0 +1,25 @@
+@import "../../../@shared/style-variables.scss";
+
+.add-task {
+
+    .create-task-form {
+        margin-top: 48px;
+        width: 100%;
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+
+        input[type=text],
+        input[type=number],
+        textarea {
+            @include basic-form-input;
+            margin-bottom: 18px;
+        }
+
+        .btn-create-task {
+            @include basic-button;
+            margin-top: 27px;
+        }
+    }
+}
