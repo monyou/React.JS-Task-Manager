@@ -71,10 +71,13 @@ export default class DBTaskManager {
                     this.tasks.doc(result.id).update({
                         ...task
                     });
-                    return true;
                 } else {
                     return false;
                 }
+            }
+        ).then(
+            result => {
+                return true;
             }
         );
     }

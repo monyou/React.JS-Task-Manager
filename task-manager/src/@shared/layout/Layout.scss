@@ -1,6 +1,7 @@
 @import "../../@shared/style-variables.scss";
 
 .layout {
+    height: 100%;
 
     .topbar {
         position: relative;
@@ -99,6 +100,7 @@
     }
 
     .content {
+        height: 100%;
         padding-bottom: 20px;
     }
 }

@@ -53,13 +53,16 @@ export default class DBUserManager {
                     if (user.password == null) {
                         user.password = result.password;
                     }
-                    this.users.doc(result.id).update({
+                    return this.users.doc(result.id).update({
                         ...user
                     });
-                    return true;
                 } else {
                     return false;
                 }
+            }
+        ).then(
+            result => {
+                return true;
             }
         );
     }

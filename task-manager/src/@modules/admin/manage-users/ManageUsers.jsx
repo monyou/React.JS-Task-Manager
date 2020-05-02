@@ -95,7 +95,7 @@ async function removeUser() {
     let userRemoved = await this.dbUserManager.remove(this.state.userToRemove);
     if (userRemoved) {
         this.setState(state => ({
-            users: state.users.filter(u => u.email !== this.state.userToRemove),
+            users: state.users.filter(u => u.email !== state.userToRemove),
             showRemoveUserDialog: false,
             userToRemove: null
         }));
