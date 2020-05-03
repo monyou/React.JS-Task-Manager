@@ -5,6 +5,7 @@ import TaskStatus from '../task-status.enum';
 export default class DBTaskManager {
     constructor() {
         this.tasks = firebase.firestore().collection('tasks');
+        this.users = firebase.firestore().collection('users');
     }
 
     async getStatistics() {
@@ -70,6 +71,33 @@ export default class DBTaskManager {
                     mappedTasks.push(map);
                 });
                 return mappedTasks;
+            }
+        );
+    }
+
+    async getAllByUserEmail(userEmail) {
+        return this.users.where('email', '==', userEmail).get().then(
+            result => {
+                if (result.docs.length === 1) {
+                    let userId = result.docs[0].id;
+                    return this.tasks.where('createdBy', '==', userId).get();
+                } else {
+                    return [];
+                }
+            }
+        ).then(
+            result => {
+                if (result) {
+                    let mappedTasks = [];
+                    result.docs.forEach(doc => {
+                        let map = new TaskModel(doc.data().title, doc.data().content, doc.data().runTime, doc.data().createdBy, doc.data().status, doc.data().createdOn);
+                        map.id = doc.id;
+                        mappedTasks.push(map);
+                    });
+                    return mappedTasks;
+                } else {
+                    return [];
+                }
             }
         );
     }

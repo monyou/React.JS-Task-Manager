@@ -5,7 +5,7 @@ import TaskModel from '../../../@shared/models/task.model';
 import { connect } from 'react-redux';
 import DBUserManager from '../../../@shared/services/db-user-manager';
 
-class AdminAddTask extends React.Component {
+class UserAddTask extends React.Component {
     constructor() {
         super();
         this.titleRef = React.createRef();
@@ -32,7 +32,7 @@ export default connect((state) => {
     return {
         loggedUser: state.loggedUser
     }
-})(AdminAddTask);
+})(UserAddTask);
 
 async function createTask(e) {
     e.preventDefault();
@@ -42,7 +42,7 @@ async function createTask(e) {
 
     let dbUserManager = new DBUserManager();
     let currentUser = await dbUserManager.getByEmail(this.props.loggedUser);
-    
+
     let task = new TaskModel(
         title,
         content,
@@ -52,7 +52,7 @@ async function createTask(e) {
 
     let dbTaskManager = new DBTaskManager();
     if (await dbTaskManager.add(task)) {
-        this.props.history.push('/admin/manage-tasks');
+        this.props.history.push('/user/dashboard');
     } else {
         alert('Task with this title already exists!');
     }

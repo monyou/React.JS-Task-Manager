@@ -13,8 +13,10 @@ import UserDash from '../../@modules/user/dashboard/Dash';
 import EditUser from '../../@modules/admin/edit-user/EditUser';
 import AccessDenied from '../access-denied/AccessDenied';
 import ManageTasks from '../../@modules/admin/manage-tasks/ManageTasks';
-import AddTask from '../../@modules/admin/add-task/AddTask';
-import EditTask from '../../@modules/admin/edit-task/EditTask';
+import AdminAddTask from '../../@modules/admin/add-task/AddTask';
+import AdminEditTask from '../../@modules/admin/edit-task/EditTask';
+import UserAddTask from '../../@modules/user/add-task/AddTask';
+import UserEditTask from '../../@modules/user/edit-task/EditTask';
 
 class Layout extends React.Component {
     constructor() {
@@ -56,10 +58,12 @@ class Layout extends React.Component {
                         <Route path="/admin/add-user" render={(props) => this.loadProtectedPage(props, AddUser, 'admin')} />
                         <Route path="/admin/edit-user" render={(props) => this.loadProtectedPage(props, EditUser, 'admin')} />
                         <Route path="/admin/manage-tasks" render={(props) => this.loadProtectedPage(props, ManageTasks, 'admin')} />
-                        <Route path="/admin/add-task" render={(props) => this.loadProtectedPage(props, AddTask, 'admin')} />
-                        <Route path="/admin/edit-task" render={(props) => this.loadProtectedPage(props, EditTask, 'admin')} />
+                        <Route path="/admin/add-task" render={(props) => this.loadProtectedPage(props, AdminAddTask, 'admin')} />
+                        <Route path="/admin/edit-task" render={(props) => this.loadProtectedPage(props, AdminEditTask, 'admin')} />
 
                         <Route path="/user/dashboard" render={(props) => this.loadProtectedPage(props, UserDash, 'user')} />
+                        <Route path="/user/add-task" render={(props) => this.loadProtectedPage(props, UserAddTask, 'user')} />
+                        <Route path="/user/edit-task" render={(props) => this.loadProtectedPage(props, UserEditTask, 'user')} />
 
                         <Route path='/access-denied' component={AccessDenied} />
                         <Redirect exact from="/" to="/home" />
@@ -123,13 +127,12 @@ function addNewButton() {
             );
         }
         if (this.props.location.pathname === '/user/dashboard') {
-            // TODO: change when user has method to add task
-            // return (
-            //     <div className="add-new-task-btn" onClick={() => this.props.history.push('/user/add-task')}>
-            //         <i className="fas fa-plus-circle"></i>
-            //         <span className='tooltip'>Create task</span>
-            //     </div>
-            // );
+            return (
+                <div className="add-new-task-btn" onClick={() => this.props.history.push('/user/add-task')}>
+                    <i className="fas fa-plus-circle"></i>
+                    <span className='tooltip'>Create task</span>
+                </div>
+            );
         }
     }
 }

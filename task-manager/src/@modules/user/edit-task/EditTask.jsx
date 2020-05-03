@@ -3,7 +3,7 @@ import './EditTask.scss';
 import DBTaskManager from '../../../@shared/services/db-task-manager';
 import TaskModel from '../../../@shared/models/task.model';
 
-export default class AdminEditTask extends React.Component {
+export default class UserEditTask extends React.Component {
     constructor(props) {
         super(props);
         this.dbTaskManager = new DBTaskManager();
@@ -75,7 +75,7 @@ async function editTask(e) {
     task.id = this.props.location.state.taskId;
 
     if (await this.dbTaskManager.edit(task)) {
-        this.props.history.push('/admin/manage-tasks');
+        this.props.history.push('/user/dashboard');
     } else {
         alert('Task with this title already exists!');
     }
