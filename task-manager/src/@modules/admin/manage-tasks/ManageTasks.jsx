@@ -59,21 +59,37 @@ export default class ManageTasks extends React.Component {
 function renderTasks() {
     let tasks = this.state.tasks.map((t, i) => {
         return (
-            <div className="item" key={i} data-index={i + 1}>
-                <div className="status" onClick={(e) => this.openChangeTaskStatusDropdown(e, t)}>
-                    {showTaskStatus(t.status)}
-                </div>
-                <div className="title">
-                    {t.title}
-                </div>
-                <div className="actions">
-                    <div className="edit" onClick={() => this.props.history.push('/admin/edit-task', { taskId: t.id })}>
-                        <i className="fas fa-edit"></i>
-                        <span className='tooltip'>Edit task</span>
+            <div className="task-wrapper" key={i}>
+                <div className="item" data-index={i + 1} onClick={(e) => openTaskInfo(e)}>
+                    <div className="status" onClick={(e) => this.openChangeTaskStatusDropdown(e, t)}>
+                        {showTaskStatus(t.status)}
                     </div>
-                    <div className="remove" onClick={() => this.openRemoveTaskDialog(t.id)}>
-                        <i className="fas fa-trash"></i>
-                        <span className='tooltip'>Remove task</span>
+                    <div className="title">
+                        {t.title}
+                    </div>
+                    <div className="actions">
+                        <div className="edit" onClick={() => this.props.history.push('/admin/edit-task', { taskId: t.id })}>
+                            <i className="fas fa-edit"></i>
+                            <span className='tooltip'>Edit task</span>
+                        </div>
+                        <div className="remove" onClick={() => this.openRemoveTaskDialog(t.id)}>
+                            <i className="fas fa-trash"></i>
+                            <span className='tooltip'>Remove task</span>
+                        </div>
+                    </div>
+                </div>
+                <div className="more-info">
+                    <div className="info-line">
+                        <i className="fas fa-info-circle" style={{ color: '#fec439' }}></i>
+                        <span className="info-data">{t.content}</span>
+                    </div>
+                    <div className="info-line">
+                        <i className="far fa-calendar-alt" style={{ color: '#15aabf' }}></i>
+                        <span className="info-data">{`Created on: ${new Date(t.createdOn.seconds * 1000).getDate()}.${new Date(t.createdOn.seconds * 1000).getMonth() + 1}.${new Date(t.createdOn.seconds * 1000).getFullYear()} at ${new Date(t.createdOn.seconds * 1000).getHours()}:${new Date(t.createdOn.seconds * 1000).getMinutes()}`}</span>
+                    </div>
+                    <div className="info-line">
+                        <i className="far fa-clock" style={{ color: '#00f9a4' }}></i>
+                        <span className="info-data">Time to finish: {t.runTime}h</span>
                     </div>
                 </div>
             </div>
@@ -81,6 +97,15 @@ function renderTasks() {
     });
 
     return tasks;
+}
+
+function openTaskInfo(e) {
+    let info = e.target.nextElementSibling;
+    if (info.style.maxHeight) {
+        info.style.maxHeight = null;
+    } else {
+        info.style.maxHeight = info.scrollHeight + "px";
+    }
 }
 
 function openChangeTaskStatusDropdown(e, t) {

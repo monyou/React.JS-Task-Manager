@@ -50,7 +50,7 @@ class Layout extends React.Component {
                         <Route path="/home" render={(props) => this.loadNotAuthPage(props, Home)} />
                         <Route path="/auth/login" render={(props) => this.loadNotAuthPage(props, Login)} />
                         <Route path="/auth/register" render={(props) => this.loadNotAuthPage(props, Register)} />
-                        
+
                         <Route path="/admin/dashboard" render={(props) => this.loadProtectedPage(props, AdminDash, 'admin')} />
                         <Route path="/admin/manage-users" render={(props) => this.loadProtectedPage(props, ManageUsers, 'admin')} />
                         <Route path="/admin/add-user" render={(props) => this.loadProtectedPage(props, AddUser, 'admin')} />
@@ -58,9 +58,9 @@ class Layout extends React.Component {
                         <Route path="/admin/manage-tasks" render={(props) => this.loadProtectedPage(props, ManageTasks, 'admin')} />
                         <Route path="/admin/add-task" render={(props) => this.loadProtectedPage(props, AddTask, 'admin')} />
                         <Route path="/admin/edit-task" render={(props) => this.loadProtectedPage(props, EditTask, 'admin')} />
-                        
+
                         <Route path="/user/dashboard" render={(props) => this.loadProtectedPage(props, UserDash, 'user')} />
-                        
+
                         <Route path='/access-denied' component={AccessDenied} />
                         <Redirect exact from="/" to="/home" />
                         <Route component={NotFound} />
@@ -123,8 +123,13 @@ function addNewButton() {
             );
         }
         if (this.props.location.pathname === '/user/dashboard') {
-            // TODO: change when user has method to add user
-            // return <div className="add-new-user-btn" onClick={() => this.props.history.push('/admin/add-user')}><i className="fas fa-user-plus"></i></div>;
+            // TODO: change when user has method to add task
+            // return (
+            //     <div className="add-new-task-btn" onClick={() => this.props.history.push('/user/add-task')}>
+            //         <i className="fas fa-plus-circle"></i>
+            //         <span className='tooltip'>Create task</span>
+            //     </div>
+            // );
         }
     }
 }

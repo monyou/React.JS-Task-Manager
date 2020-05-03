@@ -8,6 +8,7 @@
     align-items: center;
     margin-bottom: 10px;
     opacity: 0;
+    cursor: pointer;
 
     .label {
         text-transform: uppercase;
@@ -88,6 +89,7 @@
             flex-flow: row nowrap;
             align-items: center;
             border-bottom: 1px solid rgba($color: #3abc9c, $alpha: 0.3);
+            background-color: #ffffe1;
 
             .status {
                 position: relative;
@@ -151,6 +153,32 @@
                     i {
                         color: #fc4b4b;
                     }
+                }
+            }
+        }
+
+        .more-info {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.2s ease;
+            padding: 0px 18px;
+            display: flex;
+            flex-flow: column nowrap;
+
+            .info-line {
+                display: flex;
+                flex-flow: row nowrap;
+                align-items: flex-start;
+                margin-bottom: 15px;
+
+                &:first-child {
+                    margin-top: 15px;
+                }
+
+                .info-data {
+                    margin-left: 10px;
+                    font-size: 16px;
+                    font-weight: 300;
                 }
             }
         }
