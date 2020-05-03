@@ -68,7 +68,7 @@ export default class DBTaskManager {
             result => {
                 if (result) {
                     task.createdOn = result.createdOn;
-                    this.tasks.doc(result.id).update({
+                    return this.tasks.doc(result.id).update({
                         ...task
                     });
                 } else {
