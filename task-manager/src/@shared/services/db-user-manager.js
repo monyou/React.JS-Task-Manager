@@ -7,6 +7,23 @@ export default class DBUserManager {
         this.tasks = firebase.firestore().collection('tasks');
     }
 
+    async getStatistics() {
+        return this.users.get().then(
+            result => {
+                let stats = [{
+                        data: result.docs.filter(d => d.data().role === 'admin').length,
+                        label: "admins"
+                    },
+                    {
+                        data: result.docs.filter(d => d.data().role === 'user').length,
+                        label: 'users'
+                    }
+                ];
+                return stats;
+            }
+        );
+    }
+
     async getByEmail(userEmail) {
         return this.users.where('email', '==', userEmail).get().then(
             result => {

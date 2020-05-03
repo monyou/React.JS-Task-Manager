@@ -1,3 +1,64 @@
 @import "../../../@shared/style-variables.scss";
 
-.admin-dash {}
+.admin-dash {
+    height: 100%;
+    padding: 0 18px;
+
+    .group-label {
+        display: flex;
+        flex-flow: column nowrap;
+        margin-top: 25px;
+
+        .label {
+            font-size: 20px;
+            text-transform: uppercase;
+            color: $primary-color;
+        }
+
+        .hr {
+            margin-top: 10px;
+            background-color: rgba($color: $primary-color, $alpha: 0.3);
+            height: 1px;
+            width: 160px;
+        }
+    }
+
+    .users-wrapper {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: space-around;
+        margin-top: 15px;
+    }
+
+    .tasks-wrapper {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: space-around;
+        margin-top: 15px;
+    }
+
+    .tile {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+        justify-content: center;
+        width: 150px;
+        height: 110px;
+        background-image: linear-gradient(to right, $primary-color, $secondary-color);
+        color: white;
+        margin-bottom: 10px;
+        border-radius: 10px;
+        opacity: 0.5;
+
+        .label {
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
+        .data {
+            font-size: 30px;
+        }
+    }
+}

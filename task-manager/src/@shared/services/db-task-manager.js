@@ -1,9 +1,35 @@
 import TaskModel from "../models/task.model";
 import firebase from './firebase';
+import TaskStatus from '../task-status.enum';
 
 export default class DBTaskManager {
     constructor() {
         this.tasks = firebase.firestore().collection('tasks');
+    }
+
+    async getStatistics() {
+        return this.tasks.get().then(
+            result => {
+                let stats = [{
+                        data: result.docs.length,
+                        label: 'all'
+                    },
+                    {
+                        data: result.docs.filter(d => d.data().status === TaskStatus.Created).length,
+                        label: "created"
+                    },
+                    {
+                        data: result.docs.filter(d => d.data().status === TaskStatus.InProgress).length,
+                        label: 'in progress'
+                    },
+                    {
+                        data: result.docs.filter(d => d.data().status === TaskStatus.Completed).length,
+                        label: 'completed'
+                    }
+                ];
+                return stats;
+            }
+        );
     }
 
     async getById(taskId) {
