@@ -3,15 +3,22 @@ import './ManageTasks.scss';
 import DBTaskManager from '../../../@shared/services/db-task-manager';
 import YesNo from '../../../@shared/yes-no-dialog/YesNo';
 import TaskStatus from '../../../@shared/task-status.enum';
+import { connect } from 'react-redux';
 
-export default class ManageTasks extends React.Component {
-    constructor() {
-        super();
+class ManageTasks extends React.Component {
+    constructor(props) {
+        super(props);
         this.dbTaskManager = new DBTaskManager();
+        this.props.dispatch({
+            type: 'TOGGLE_LOADING'
+        });
         this.dbTaskManager.getAll().then(
             result => {
                 this.setState({
                     tasks: result
+                });
+                this.props.dispatch({
+                    type: 'TOGGLE_LOADING'
                 });
             }
         );
@@ -55,6 +62,8 @@ export default class ManageTasks extends React.Component {
         );
     }
 }
+
+export default connect()(ManageTasks);
 
 function renderTasks() {
     let tasks = this.state.tasks.map((t, i) => {

@@ -11,6 +11,7 @@ import Layout from './@shared/layout/Layout';
 
 // Redux store implemented
 const initialState = {
+  globalLoading: false,
   isLogged: false,
   loggedUser: null,
   loggedUserRole: null

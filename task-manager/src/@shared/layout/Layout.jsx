@@ -24,6 +24,7 @@ class Layout extends React.Component {
         this.state = {
             sidebarOpened: false
         };
+        this.loadGlobalLoading = loadGlobalLoading.bind(this);
         this.loadProtectedPage = loadProtectedPage.bind(this);
         this.loadNotAuthPage = loadNotAuthPage.bind(this);
         this.menuOrHomeIcon = menuOrHomeIcon.bind(this);
@@ -38,6 +39,7 @@ class Layout extends React.Component {
     render() {
         return (
             <div className="layout">
+                {this.loadGlobalLoading()}
                 <div className="topbar">
                     {this.menuOrHomeIcon()}
                     {this.createLabelForTopbar()}
@@ -77,10 +79,22 @@ class Layout extends React.Component {
 
 export default connect((state) => {
     return {
+        globalLoading: state.globalLoading,
         isLogged: state.isLogged,
         loggedUserRole: state.loggedUserRole,
     }
 })(Layout);
+
+function loadGlobalLoading() {
+    return this.props.globalLoading ? (
+        <div className="globalLoading">
+            <div className="logo">
+                <img src="/assets/images/logo512.png" alt="logo" />
+                <img src="/assets/images/logo-loader.png" alt="logo" />
+            </div>
+        </div>
+    ) : null;
+}
 
 function loadProtectedPage(props, Component, role) {
     return (
@@ -231,6 +245,12 @@ function createLabelForTopbar() {
             break;
         case '/user/dashboard':
             name = 'Dashboard';
+            break;
+        case '/user/add-task':
+            name = 'Add Task';
+            break;
+        case '/user/edit-task':
+            name = 'Edit Task';
             break;
         case '/access-denied':
             name = 'Access Denied'

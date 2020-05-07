@@ -2,11 +2,15 @@ import React from 'react';
 import './EditTask.scss';
 import DBTaskManager from '../../../@shared/services/db-task-manager';
 import TaskModel from '../../../@shared/models/task.model';
+import { connect } from 'react-redux';
 
-export default class UserEditTask extends React.Component {
+class UserEditTask extends React.Component {
     constructor(props) {
         super(props);
         this.dbTaskManager = new DBTaskManager();
+        this.props.dispatch({
+            type: 'TOGGLE_LOADING'
+        });
         this.dbTaskManager.getById(this.props.location.state.taskId).then(
             result => {
                 this.setState({
@@ -17,6 +21,9 @@ export default class UserEditTask extends React.Component {
                         status: result.status,
                         createdBy: result.createdBy
                     }
+                });
+                this.props.dispatch({
+                    type: 'TOGGLE_LOADING'
                 });
             }
         );
@@ -46,6 +53,8 @@ export default class UserEditTask extends React.Component {
         );
     }
 }
+
+export default connect()(UserEditTask);
 
 function onInputChange(e) {
     let value = e.value;

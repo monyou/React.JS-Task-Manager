@@ -5,13 +5,19 @@ import DBUserManager from '../../../@shared/services/db-user-manager';
 import YesNo from '../../../@shared/yes-no-dialog/YesNo';
 
 class ManageUsers extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.dbUserManager = new DBUserManager();
+        this.props.dispatch({
+            type: 'TOGGLE_LOADING'
+        });
         this.dbUserManager.getAll().then(
             result => {
                 this.setState({
                     users: result
+                });
+                this.props.dispatch({
+                    type: 'TOGGLE_LOADING'
                 });
             }
         );

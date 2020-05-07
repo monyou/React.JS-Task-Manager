@@ -12,6 +12,10 @@ export default (state = JSON.parse(localStorage.getItem('state')), action) => {
                 loggedUserRole: null,
                 loggedUser: null
             });
+        case 'TOGGLE_LOADING':
+            return Object.assign({}, state, {
+                globalLoading: !state.globalLoading
+            });
         default:
             return state;
     }

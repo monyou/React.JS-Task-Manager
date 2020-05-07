@@ -9,10 +9,16 @@ class UserDash extends React.Component {
     constructor(props) {
         super(props);
         this.dbTaskManager = new DBTaskManager();
+        this.props.dispatch({
+            type: 'TOGGLE_LOADING'
+        });
         this.dbTaskManager.getAllByUserEmail(this.props.loggedUser).then(
             result => {
                 this.setState({
                     tasks: result
+                });
+                this.props.dispatch({
+                    type: 'TOGGLE_LOADING'
                 });
             }
         );

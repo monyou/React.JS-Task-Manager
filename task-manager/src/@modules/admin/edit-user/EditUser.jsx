@@ -2,11 +2,15 @@ import React from 'react';
 import './EditUser.scss';
 import UserModel from '../../../@shared/models/user.model';
 import DBUserManager from '../../../@shared/services/db-user-manager';
+import { connect } from 'react-redux';
 
-export default class EditUser extends React.Component {
+class EditUser extends React.Component {
     constructor(props) {
         super(props);
         let dbUserManager = new DBUserManager();
+        this.props.dispatch({
+            type: 'TOGGLE_LOADING'
+        });
         dbUserManager.getByEmail(this.props.location.state.email).then(
             result => {
                 this.setState({
@@ -17,6 +21,9 @@ export default class EditUser extends React.Component {
                         repPass: '',
                         isAdmin: result.role === 'admin' ? true : false,
                     }
+                });
+                this.props.dispatch({
+                    type: 'TOGGLE_LOADING'
                 });
             }
         );
@@ -51,6 +58,8 @@ export default class EditUser extends React.Component {
         );
     }
 }
+
+export default connect()(EditUser);
 
 function onInputChange(e) {
     let value = null;

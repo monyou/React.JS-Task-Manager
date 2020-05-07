@@ -2,17 +2,24 @@ import React from 'react';
 import './Dash.scss';
 import DBTaskManager from '../../../@shared/services/db-task-manager';
 import DBUserManager from '../../../@shared/services/db-user-manager';
+import { connect } from 'react-redux';
 
-export default class AdminDash extends React.Component {
-    constructor() {
-        super();
+class AdminDash extends React.Component {
+    constructor(props) {
+        super(props);
         this.dbTaskManager = new DBTaskManager();
         this.dbUserManager = new DBUserManager();
+        this.props.dispatch({
+            type: 'TOGGLE_LOADING'
+        });
         this.dbTaskManager.getStatistics().then(
             result => {
                 this.setState({
                     tasksStat: result
-                })
+                });
+                this.props.dispatch({
+                    type: 'TOGGLE_LOADING'
+                });
             }
         );
         this.dbUserManager.getStatistics().then(
@@ -51,6 +58,8 @@ export default class AdminDash extends React.Component {
         );
     }
 }
+
+export default connect()(AdminDash);
 
 function renderUsersStatistics() {
     let usersStat = this.state.usersStat.map((us, i) => {
