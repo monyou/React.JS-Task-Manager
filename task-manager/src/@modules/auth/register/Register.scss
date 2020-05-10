@@ -11,20 +11,38 @@
     }
 
     .register-form {
-        margin-top: 60px;
+        margin-top: 40px;
         width: 100%;
         display: flex;
         flex-flow: column nowrap;
         justify-content: center;
         align-items: center;
 
-        input {
-            @include basic-form-input;
-            margin-bottom: 18px;
+        .form-group {
+            width: 80%;
+            margin-bottom: 30px;
+
+            input {
+                @include basic-form-input;
+            }
         }
 
         .btn-register {
             @include basic-button;
+        }
+
+        .error-msg {
+            @include form-error-message;
+        }
+    }
+}
+
+@media (min-width: map-get($breakpoints, xs)) {
+    .register {
+        .register-form {
+            .form-group {
+                width: 320px;
+            }
         }
     }
 }

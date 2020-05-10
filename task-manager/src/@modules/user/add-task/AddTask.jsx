@@ -4,25 +4,74 @@ import DBTaskManager from '../../../@shared/services/db-task-manager';
 import TaskModel from '../../../@shared/models/task.model';
 import { connect } from 'react-redux';
 import DBUserManager from '../../../@shared/services/db-user-manager';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 class UserAddTask extends React.Component {
     constructor() {
         super();
-        this.titleRef = React.createRef();
-        this.contentRef = React.createRef();
-        this.runTimeRef = React.createRef();
+        this.state = {
+            requestErrorMsg: ''
+        };
         this.createTask = createTask.bind(this);
     }
 
     render() {
         return (
             <div className="add-task">
-                <form className="create-task-form" onSubmit={(e) => this.createTask(e)}>
-                    <input type="text" name="title" placeholder="Title *" ref={this.titleRef} required />
-                    <textarea name="content" rows="5" placeholder="Content *" ref={this.contentRef} required></textarea>
-                    <input type="number" name="runtime" placeholder="Run time (hours) *" ref={this.runTimeRef} required />
-                    <input className="btn-create-task" type="submit" value="Add task" />
-                </form>
+                <Formik
+                    initialValues={{
+                        title: '',
+                        content: '',
+                        runTime: ''
+                    }}
+                    validate={
+                        values => {
+                            const errors = {};
+                            if (!values.title) {
+                                errors.title = 'Title is required';
+                            }
+
+                            if (!values.content) {
+                                errors.content = 'Content is required';
+                            }
+
+                            if (!values.runTime) {
+                                errors.runTime = 'Run time is required';
+                            }
+
+                            if (errors !== {}) {
+                                this.setState({
+                                    requestErrorMsg: ''
+                                });
+                            }
+                            return errors;
+                        }
+                    }
+                    onSubmit={(values) => {
+                        this.createTask(values);
+                    }}
+                >
+                    {
+                        () => (
+                            <Form className="create-task-form">
+                                <div className="form-group">
+                                    <Field type="text" name="title" placeholder="Title" />
+                                    <ErrorMessage name="title" component="div" className="error-msg" />
+                                </div>
+                                <div className="form-group">
+                                    <Field as="textarea" rows="5" name="content" placeholder="Content" />
+                                    <ErrorMessage name="content" component="div" className="error-msg" />
+                                </div>
+                                <div className="form-group">
+                                    <Field type="number" name="runTime" placeholder="Run time (hours)" />
+                                    <ErrorMessage name="runTime" component="div" className="error-msg" />
+                                    {this.state.requestErrorMsg !== '' ? <div className="error-msg">{this.state.requestErrorMsg}</div> : null}
+                                </div>
+                                <input className="btn-create-task" type="submit" value="Add task" />
+                            </Form>
+                        )
+                    }
+                </Formik>
             </div>
         );
     }
@@ -34,11 +83,10 @@ export default connect((state) => {
     }
 })(UserAddTask);
 
-async function createTask(e) {
-    e.preventDefault();
-    let title = this.titleRef.current.value;
-    let content = this.contentRef.current.value;
-    let runTime = this.runTimeRef.current.value;
+async function createTask(values) {
+    let title = values.title;
+    let content = values.content;
+    let runTime = values.runTime;
 
     let dbUserManager = new DBUserManager();
     let currentUser = await dbUserManager.getByEmail(this.props.loggedUser);
@@ -54,6 +102,8 @@ async function createTask(e) {
     if (await dbTaskManager.add(task)) {
         this.props.history.push('/user/dashboard');
     } else {
-        alert('Task with this title already exists!');
+        this.setState({
+            requestErrorMsg: 'Task with this title already exists!'
+        });
     }
 }

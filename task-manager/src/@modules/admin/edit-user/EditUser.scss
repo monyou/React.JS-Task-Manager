@@ -11,11 +11,13 @@
         justify-content: center;
         align-items: center;
 
-        input[type=text],
-        input[type=email],
-        input[type=password] {
-            @include basic-form-input;
-            margin-bottom: 18px;
+        .form-group {
+            width: 80%;
+            margin-bottom: 30px;
+
+            input {
+                @include basic-form-input;
+            }
         }
 
         .checkbox {
@@ -33,7 +35,27 @@
 
         .btn-edit-user {
             @include basic-button;
-            margin-top: 27px;
+            margin-top: 30px;
+        }
+
+        .error-msg {
+            @include form-error-message;
+        }
+
+        .request-err {
+            @include form-error-message;
+            position: relative;
+            top: 15px;
+        }
+    }
+}
+
+@media (min-width: map-get($breakpoints, xs)) {
+    .edit-user {
+        .edit-user-form {
+            .form-group {
+                width: 320px;
+            }
         }
     }
 }

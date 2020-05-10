@@ -3,6 +3,7 @@ import './EditUser.scss';
 import UserModel from '../../../@shared/models/user.model';
 import DBUserManager from '../../../@shared/services/db-user-manager';
 import { connect } from 'react-redux';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 class EditUser extends React.Component {
     constructor(props) {
@@ -34,26 +35,82 @@ class EditUser extends React.Component {
                 pass: '',
                 repPass: '',
                 isAdmin: false,
-            }
+            },
+            requestErrorMsg: ''
         };
-        this.onInputChange = onInputChange.bind(this);
         this.editUser = editUser.bind(this);
     }
 
     render() {
         return (
             <div className="edit-user">
-                <form className="edit-user-form" onSubmit={(e) => this.editUser(e)}>
-                    <input type="text" name="names" placeholder="Names" value={this.state.newUser.names} onChange={(e) => this.onInputChange(e.target)} />
-                    <input type="email" name="email" placeholder="Email *" value={this.state.newUser.email} onChange={(e) => this.onInputChange(e.target)} required />
-                    <input type="password" name="pass" placeholder="New password" value={this.state.newUser.pass} onChange={(e) => this.onInputChange(e.target)} />
-                    <input type="password" name="repPass" placeholder="Repeat new password" value={this.state.newUser.repPass} onChange={(e) => this.onInputChange(e.target)} />
-                    <div className="checkbox">
-                        <label htmlFor="isAdmin">Make the user admin?</label>
-                        <input type="checkbox" name="isAdmin" checked={this.state.newUser.isAdmin} onChange={(e) => this.onInputChange(e.target)} />
-                    </div>
-                    <input className="btn-edit-user" type="submit" value="Edit user" />
-                </form>
+                <Formik
+                    initialValues={{
+                        names: this.state.newUser.names,
+                        email: this.state.newUser.email,
+                        password: '',
+                        repPassword: '',
+                        isAdmin: this.state.newUser.isAdmin
+                    }}
+                    validate={
+                        values => {
+                            const errors = {};
+                            if (!values.names) {
+                                errors.names = 'Names are required';
+                            }
+
+                            if (!values.email) {
+                                errors.email = 'Email is required';
+                            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+                                errors.email = 'Invalid email address';
+                            }
+
+                            if (values.password && (values.password !== values.repPassword)) {
+                                errors.repPassword = 'Password missmatch';
+                            }
+
+                            if (errors !== {}) {
+                                this.setState({
+                                    requestErrorMsg: ''
+                                });
+                            }
+                            return errors;
+                        }
+                    }
+                    onSubmit={(values) => {
+                        this.editUser(values);
+                    }}
+                    enableReinitialize={true}
+                >
+                    {
+                        () => (
+                            <Form className="edit-user-form">
+                                <div className="form-group">
+                                    <Field type="text" name="names" placeholder="Names" />
+                                    <ErrorMessage name="names" component="div" className="error-msg" />
+                                </div>
+                                <div className="form-group">
+                                    <Field type="email" name="email" placeholder="Email" />
+                                    <ErrorMessage name="email" component="div" className="error-msg" />
+                                </div>
+                                <div className="form-group">
+                                    <Field type="password" name="password" placeholder="Password" />
+                                    <ErrorMessage name="password" component="div" className="error-msg" />
+                                </div>
+                                <div className="form-group">
+                                    <Field type="password" name="repPassword" placeholder="Repeat password" />
+                                    <ErrorMessage name="repPassword" component="div" className="error-msg" />
+                                </div>
+                                <div className="checkbox">
+                                    <label htmlFor="isAdmin">Make the user admin?</label>
+                                    <Field type="checkbox" name="isAdmin" />
+                                </div>
+                                {this.state.requestErrorMsg !== '' ? <div className="request-err">{this.state.requestErrorMsg}</div> : null}
+                                <input className="btn-edit-user" type="submit" value="Edit user" />
+                            </Form>
+                        )
+                    }
+                </Formik>
             </div>
         );
     }
@@ -61,34 +118,12 @@ class EditUser extends React.Component {
 
 export default connect()(EditUser);
 
-function onInputChange(e) {
-    let value = null;
-    let key = e.name;
-    if (e.type === 'checkbox') {
-        value = e.checked;
-    } else {
-        value = e.value;
-    }
-    let newChanges = this.state.newUser;
-    newChanges[key] = value;
-    this.setState({
-        newUser: newChanges
-    });
-}
-
-async function editUser(e) {
-    e.preventDefault();
+async function editUser(values) {
     let oldEmail = this.props.location.state.email;
-    let newNames = this.state.newUser.names;
-    let newEmail = this.state.newUser.email;
-    let newPass = this.state.newUser.pass;
-    let repNewPass = this.state.newUser.repPass;
-    let newIsAdmin = this.state.newUser.isAdmin;
-
-    if ((newPass || repNewPass) && newPass !== repNewPass) {
-        alert('Passwords missmatch!');
-        return;
-    }
+    let newNames = values.names;
+    let newEmail = values.email;
+    let newPass = values.password;
+    let newIsAdmin = values.isAdmin;
 
     let user = new UserModel(
         newEmail,
@@ -103,6 +138,8 @@ async function editUser(e) {
     if (await dbUserManager.edit(user, editEmail)) {
         this.props.history.push('/admin/manage-users');
     } else {
-        alert('The user was NOT edited!');
+        this.setState({
+            requestErrorMsg: 'The user was NOT edited!'
+        });
     }
 }

@@ -31,7 +31,7 @@ $breakpoints: (xs: 576px, sm: 768px, md: 992px, lg: 1200px);
 
 @mixin basic-form-input {
     display: block;
-    width: 80%;
+    width: 100%;
     font-size: 16px;
     font-size: 400;
     padding: 10px 0;
@@ -40,16 +40,21 @@ $breakpoints: (xs: 576px, sm: 768px, md: 992px, lg: 1200px);
     border: 2px solid $primary-color;
     border-radius: 10px;
     outline: none;
+    margin: 0;
 
     &::-webkit-input-placeholder {
         font-size: 16px;
         font-weight: 400;
         color: rgba(#6a888c, 0.5);
     }
+}
 
-    @media (min-width: map-get($breakpoints, xs)) {
-        width: 320px;
-    }
+@mixin form-error-message {
+    position: absolute;
+    font-size: 12px;
+    color: red;
+    padding: 5px;
+    text-align: left;
 }
 
 @mixin tooltip($position) {

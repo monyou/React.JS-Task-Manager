@@ -2,12 +2,14 @@ import React from 'react';
 import './Login.scss';
 import { connect } from 'react-redux';
 import DBAuthManager from '../../../@shared/services/db-auth-manager';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 class Login extends React.Component {
     constructor() {
         super();
-        this.emailRef = React.createRef();
-        this.passRef = React.createRef();
+        this.state = {
+            requestErrorMsg: ''
+        };
         this.login = login.bind(this);
     }
 
@@ -15,11 +17,54 @@ class Login extends React.Component {
         return (
             <div className="login">
                 <img className="logo" src="/assets/images/logo512.png" alt="logo" />
-                <form className="login-form" onSubmit={(e) => this.login(e)}>
-                    <input type="email" name="email" placeholder="Email" ref={this.emailRef} required />
-                    <input type="password" name="password" placeholder="Password" ref={this.passRef} required />
-                    <input className="btn-login" type="submit" value="Login" />
-                </form>
+
+                <Formik
+                    initialValues={{
+                        email: '',
+                        password: ''
+                    }}
+                    validate={
+                        values => {
+                            const errors = {};
+                            if (!values.email) {
+                                errors.email = 'Email is required';
+                            } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+                                errors.email = 'Invalid email address';
+                            }
+
+                            if (!values.password) {
+                                errors.password = 'Password is required';
+                            }
+
+                            if (errors !== {}) {
+                                this.setState({
+                                    requestErrorMsg: ''
+                                });
+                            }
+                            return errors;
+                        }
+                    }
+                    onSubmit={(values) => {
+                        this.login(values);
+                    }}
+                >
+                    {
+                        () => (
+                            <Form className="login-form">
+                                <div className="form-group">
+                                    <Field type="email" name="email" placeholder="Email" />
+                                    <ErrorMessage name="email" component="div" className="error-msg" />
+                                </div>
+                                <div className="form-group">
+                                    <Field type="password" name="password" placeholder="Password" />
+                                    <ErrorMessage name="password" component="div" className="error-msg" />
+                                    {this.state.requestErrorMsg !== '' ? <div className="error-msg">{this.state.requestErrorMsg}</div> : null}
+                                </div>
+                                <input className="btn-login" type="submit" value="Login" />
+                            </Form>
+                        )
+                    }
+                </Formik>
             </div>
         );
     }
@@ -27,10 +72,9 @@ class Login extends React.Component {
 
 export default connect()(Login);
 
-async function login(e) {
-    e.preventDefault();
-    let email = this.emailRef.current.value;
-    let password = this.passRef.current.value;
+async function login(values) {
+    let email = values.email;
+    let password = values.password;
 
     let loggedUserRole = await DBAuthManager.login(email, password);
 
@@ -56,6 +100,8 @@ async function login(e) {
                 break;
         }
     } else {
-        alert('No such user found with these credentials!');
+        this.setState({
+            requestErrorMsg: 'No such user found with these credentials!'
+        });
     }
 }
