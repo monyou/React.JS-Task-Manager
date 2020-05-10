@@ -40,7 +40,7 @@ class ManageTasks extends React.Component {
         return (
             <div className="manage-tasks">
                 <div className="tasks-list">
-                    {this.renderTasks()}
+                    {this.state.tasks.length > 0 ? this.renderTasks() : <div className="no-tasks-label">There are no tasks available</div>}
                     <div className="statusesDropdown">
                         <div className="status-created" onClick={() => this.changeTaskStatus(TaskStatus.Created)}>
                             <span className="label">Created</span>

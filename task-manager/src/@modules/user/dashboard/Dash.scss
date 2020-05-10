@@ -24,6 +24,13 @@
 .user-dash {
     height: 100%;
 
+    .no-tasks-label {
+        width: 100%;
+        text-align: center;
+        color: gray;
+        margin-top: 20px;
+    }
+
     .tasks-list {
         position: relative;
         height: 100%;
